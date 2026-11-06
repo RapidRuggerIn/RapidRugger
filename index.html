@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%2064%2064%22%3E%3Crect%20width=%2264%22%20height=%2264%22%20rx=%2214%22%20fill=%22%23faf9f5%22/%3E%3Ctext%20x=%2232%22%20y=%2240%22%20text-anchor=%22middle%22%20font-family=%22Georgia%2Cserif%22%20font-weight=%22700%22%20font-size=%2225%22%20fill=%22%231f1e1d%22%3E%3Ctspan%20fill=%22%23e0301e%22%3ES%3C/tspan%3Eh%3Ctspan%20fill=%22%23e0301e%22%3E.%3C/tspan%3Eai%3C/text%3E%3C/svg%3E">
 <title>shoph.ai: compare prices across stores</title>
 <meta name="description" content="Tell shoph.ai what you want to buy and compare prices across stores. Free.">
 <style>
@@ -160,7 +161,7 @@ details.done ul{margin:8px 0 0 4px;padding-left:12px;border-left:2px solid var(-
 .pwrap{position:relative;display:block}.pwrap input{padding-right:64px}
 .pwrap button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--acc);font-size:12.5px;font-weight:600;padding:6px 8px;border-radius:7px}
 .hint{font-size:12.5px;color:var(--mut);margin-top:-4px}
-.ac .err{text-align:center}
+.ac .err{text-align:center;color:var(--warn);font-size:13.5px}.ac .err:empty{display:none}
 .btn.wide{width:100%;padding:11px}
 .mc .row{margin-top:4px}
 </style></head>
@@ -474,7 +475,7 @@ window.Auth = (() => {
     $('#aT').textContent = su ? 'Create your account' : 'Welcome back';
     $('#aP').textContent = su ? 'Free, and it only takes a few seconds.' : 'Log in to keep searching and save your history.';
     $('#aL2').hidden = !su; $('#aHint').hidden = !su;
-    pw.autocomplete = su ? 'new-password' : 'current-password';
+    pw.autocomplete = su ? 'new-password' : 'current-password'; pw.placeholder = su ? 'At least 8 characters' : 'Your password';
     go.textContent = label(); err.textContent = '';
     $('#aNote').hidden = !msg; $('#aNote').textContent = msg || '';
     $('#aSw').innerHTML = su ? 'Already have an account? <button type="button" data-mode="login">Log in</button>' : 'New here? <button type="button" data-mode="signup">Create an account</button>';
