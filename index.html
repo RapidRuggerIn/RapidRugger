@@ -105,14 +105,14 @@ details.done ul{margin:8px 0 0 4px;padding-left:12px;border-left:2px solid var(-
 .links a{color:var(--acc);text-decoration:none;white-space:nowrap}.links a:hover{text-decoration:underline}
 .none{padding:26px;text-align:center;color:var(--mut);grid-column:1/-1}
 .bar{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,var(--bg) 45%);padding:30px 16px 14px;pointer-events:none}
-form{pointer-events:auto;max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:7px 7px 7px 18px;box-shadow:var(--sh);transition:border-color .15s}
-form:focus-within{border-color:var(--acc)}
-form input{flex:1;border:0;outline:0;background:transparent;font-size:16px;padding:8px 0;min-width:0}
-form .mic{background:transparent;color:var(--mut)}form .mic:hover{background:var(--hov);color:var(--ink)}
-form .mic.on{background:color-mix(in srgb,var(--acc) 16%,transparent);color:var(--acc);animation:pulse 1.3s ease-out infinite}
+#f{pointer-events:auto;max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:7px 7px 7px 18px;box-shadow:var(--sh);transition:border-color .15s}
+#f:focus-within{border-color:var(--acc)}
+#f input{flex:1;border:0;outline:0;background:transparent;font-size:16px;padding:8px 0;min-width:0}
+#f .mic{background:transparent;color:var(--mut)}#f .mic:hover{background:var(--hov);color:var(--ink)}
+#f .mic.on{background:color-mix(in srgb,var(--acc) 16%,transparent);color:var(--acc);animation:pulse 1.3s ease-out infinite}
 @keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--acc) 45%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
-form button{border:0;background:var(--acc);color:var(--onacc);width:38px;height:38px;border-radius:12px;display:grid;place-items:center;transition:.15s}
-form button:hover{background:var(--accd)}form button:disabled{opacity:.4;cursor:default}
+#f button{border:0;background:var(--acc);color:var(--onacc);width:38px;height:38px;border-radius:12px;display:grid;place-items:center;transition:.15s}
+#f button:hover{background:var(--accd)}#f button:disabled{opacity:.4;cursor:default}
 .note{text-align:center;font-size:12px;color:var(--mut);margin-top:8px}
 .ov{display:none}
 @media(max-width:800px){.side{position:fixed;inset:0 auto 0 0;z-index:20;transform:translateX(-100%)}.side.open{transform:none;box-shadow:var(--sh)}.ov.open{display:block;position:fixed;inset:0;background:#0006;z-index:19}.top{display:flex}.hero{padding-top:7vh}.wrap{padding:6px 14px 170px}}
@@ -142,6 +142,27 @@ form button:hover{background:var(--accd)}form button:disabled{opacity:.4;cursor:
 .sw{text-align:center;font-size:13.5px;color:var(--mut)}.sw button{border:0;background:none;color:var(--acc);font-weight:600;padding:0 2px}.sw button:hover{text-decoration:underline}
 .gate{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 18px;text-align:center;margin:26px 0 8px;animation:up .3s both}.gate h3{font:500 20px var(--serif);margin-bottom:6px}.gate p{color:var(--mut);font-size:14px;margin-bottom:14px}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+[hidden]{display:none!important}
+.authpage{position:fixed;inset:0;z-index:50;background:var(--bg);overflow:auto;display:grid;place-items:center;padding:20px}
+.ac{position:relative;width:min(420px,100%);background:var(--card);border:1px solid var(--line);border-radius:20px;padding:30px 26px 24px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:14px;animation:up .3s both}
+.ac .logo{text-align:center;font-size:26px}
+.ax{position:absolute;top:12px;right:12px;border:0;background:transparent;color:var(--mut);width:32px;height:32px;border-radius:8px;font-size:15px}.ax:hover{background:var(--hov);color:var(--ink)}
+.ntc{background:color-mix(in srgb,var(--warn) 13%,transparent);color:var(--warn);border-radius:10px;padding:9px 12px;font-size:13.5px;text-align:center}
+.tabs{display:grid;grid-template-columns:1fr 1fr;background:var(--panel);border-radius:11px;padding:4px;gap:4px}
+.tabs button{border:0;background:transparent;border-radius:8px;padding:8px;font-weight:600;font-size:14px;color:var(--mut)}
+.tabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.14)}
+.ac h2{font:500 24px var(--serif);text-align:center;letter-spacing:-.01em}
+.ac>p{color:var(--mut);font-size:13.5px;text-align:center;margin-top:-8px}
+.ac form{display:flex;flex-direction:column;gap:12px}
+.ac label{display:flex;flex-direction:column;gap:5px;font-size:13px;color:var(--mut);font-weight:500}
+.ac input{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px;font-size:16px;outline:0;width:100%;color:var(--ink)}
+.ac input:focus{border-color:var(--acc)}
+.pwrap{position:relative;display:block}.pwrap input{padding-right:64px}
+.pwrap button{position:absolute;right:6px;top:50%;transform:translateY(-50%);border:0;background:transparent;color:var(--acc);font-size:12.5px;font-weight:600;padding:6px 8px;border-radius:7px}
+.hint{font-size:12.5px;color:var(--mut);margin-top:-4px}
+.ac .err{text-align:center}
+.btn.wide{width:100%;padding:11px}
+.mc .row{margin-top:4px}
 </style></head>
 <body>
 <aside class="side" id="side">
@@ -165,7 +186,25 @@ form button:hover{background:var(--accd)}form button:disabled{opacity:.4;cursor:
  <div class="bar"><form id="f" autocomplete="off"><input id="q" placeholder="Search for a product, add a budget if you like" maxlength="100" aria-label="Search" autofocus><button type="button" class="mic" id="mic" aria-label="Search by voice" title="Search by voice" hidden><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button id="go" aria-label="Search"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></form>
  <div class="note">Prices change often. Confirm on the store page before you buy.</div></div>
 </div>
-<div class="modal" id="ownModal" hidden><form class="mc" id="ownForm"><h2 id="amT">Log in</h2><p id="amP"></p><div id="amF" style="display:grid;gap:12px"><input type="email" id="ownEm" placeholder="Email" aria-label="Email" autocomplete="username"><input type="password" id="ownPw" placeholder="Password" aria-label="Password" autocomplete="current-password"></div><div class="err" id="ownErr" role="alert"></div><div class="row"><button type="button" class="btn" id="ownCancel">Close</button><button type="button" class="btn" id="amDash" hidden>Open dashboard</button><button class="btn pri" id="ownGo">Log in</button></div><div class="sw" id="amSw"></div></form></div>
+<div class="authpage" id="authPage" hidden>
+ <div class="ac">
+  <button class="ax" id="aClose" type="button" aria-label="Close" hidden>✕</button>
+  <div class="logo">shoph<i>.</i>ai</div>
+  <div class="ntc" id="aNote" hidden></div>
+  <div class="tabs" role="tablist"><button type="button" role="tab" id="tLogin" data-mode="login" aria-selected="true" class="on">Log in</button><button type="button" role="tab" id="tSignup" data-mode="signup" aria-selected="false">Sign up</button></div>
+  <h2 id="aT">Welcome back</h2><p id="aP"></p>
+  <form id="authForm" novalidate>
+   <label>Email<input type="email" id="aEmail" autocomplete="username" inputmode="email" maxlength="120" placeholder="you@example.com"></label>
+   <label>Password<span class="pwrap"><input type="password" id="aPass" autocomplete="current-password" maxlength="100" placeholder="Your password"><button type="button" id="aEye" aria-label="Show or hide password">Show</button></span></label>
+   <label id="aL2" hidden>Confirm password<input type="password" id="aPass2" autocomplete="new-password" maxlength="100" placeholder="Repeat your password"></label>
+   <div class="hint" id="aHint" hidden>Use at least 8 characters.</div>
+   <div class="err" id="aErr" role="alert"></div>
+   <button class="btn pri wide" id="aGo">Log in</button>
+  </form>
+  <div class="sw" id="aSw"></div>
+ </div>
+</div>
+<div class="modal" id="acctModal" hidden><div class="mc"><h2>Your account</h2><p id="acP"></p><div class="row"><button type="button" class="btn" id="acClose">Close</button><button type="button" class="btn" id="acDash" hidden>Open dashboard</button><button type="button" class="btn pri" id="acOut">Sign out</button></div></div></div>
 <div class="dash" id="dash" hidden></div>
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycby4m6x9xgbThTtXS1xNcgAQQokMbvlKnavy0WV7wnpp70gQ4quQgakkG0Oa0kCCf44t/exec';
@@ -320,7 +359,7 @@ async function runTurn(sec, chat, text, idx, fresh) {
   } finally { busy = false; $('#go').disabled = false; }
 }
 async function search(text) {
-  text = text.trim(); if (!text || busy) return; if (Auth.gate()) { $('#q').value = text; return; } closeSide();
+  text = text.trim(); if (!text || busy) return; if (Auth.gate(text)) return; closeSide();
   $('#hero').style.display = 'none';
   let chat = chats.find(c => c.id === active);
   if (!chat) { chat = { id: Date.now().toString(36), title: text.slice(0, 50), ts: Date.now(), msgs: [] }; chats.unshift(chat); active = chat.id; }
@@ -400,34 +439,75 @@ addEventListener('keydown', e => { if (e.key === 'Escape') closeSide(); });
 })();
 // ---------- accounts, guest limit, owner dashboard ----------
 window.Auth = (() => {
-  const live = !API_URL.startsWith('PASTE'), m = $('#ownModal'), d = $('#dash'), pw = $('#ownPw'), em = $('#ownEm'), err = $('#ownErr'), go = $('#ownGo'), q = $('#q'), ph0 = q.placeholder;
+  const FREE = 2; // searches a visitor gets before the login/signup page
+  const live = !API_URL.startsWith('PASTE');
+  const pg = $('#authPage'), ac = $('#acctModal'), d = $('#dash'), q = $('#q'), ph0 = q.placeholder, note = $('.note'), note0 = note.textContent;
+  const em = $('#aEmail'), pw = $('#aPass'), pw2 = $('#aPass2'), err = $('#aErr'), go = $('#aGo');
+  const EMAIL = /^[a-z0-9._%+\-]+@[a-z0-9\-]+(\.[a-z0-9\-]+)*\.[a-z]{2,}$/;
   const ls = { get: k => { try { return localStorage.getItem(k) || ''; } catch (_) { return ''; } }, set: (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (_) {} } };
   const tok = () => ls.get('shophai.tok'), mail = () => ls.get('shophai.email'), isOwner = () => ls.get('shophai.role') === 'owner', used = () => +ls.get('shophai.guest') || 0;
-  const blocked = () => live && !tok() && used() >= 1;
-  const MSG = { invalid: 'Wrong email or password.', locked: 'Too many attempts. Try again in 15 minutes.', bad_email: 'Enter a valid email address.', weak: 'Use at least 8 characters for your password.', exists: 'An account with this email already exists. Log in instead.', busy: 'Too many sign-ups right now. Try again in a while.' };
-  const post = async o => (await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) })).json();
-  let mode = 'login';
-  const sync = () => { $('#ownTx').textContent = tok() ? mail() : 'Log in'; q.placeholder = blocked() ? 'Log in to keep searching' : ph0; if (!blocked()) document.querySelectorAll('.gate').forEach(x => x.remove()); };
-  const setSession = (t, e, r) => { ls.set('shophai.tok', t); ls.set('shophai.email', e); ls.set('shophai.role', r); sync(); };
-  const view = (md, msg) => {
-    mode = md; err.textContent = ''; const acc = md === 'account', su = md === 'signup';
-    $('#amF').hidden = acc; $('#amDash').hidden = !(acc && isOwner());
-    $('#amT').textContent = acc ? 'Your account' : su ? 'Create an account' : 'Log in';
-    $('#amP').textContent = acc ? 'Signed in as ' + mail() + (isOwner() ? ' (owner)' : '') : msg || (su ? 'Free, and it only takes a few seconds.' : 'Welcome back.');
-    go.textContent = acc ? 'Sign out' : su ? 'Create account' : 'Log in';
-    pw.autocomplete = su ? 'new-password' : 'current-password';
-    $('#amSw').innerHTML = acc ? '' : su ? 'Already have an account? <button type="button" data-sw="login">Log in</button>' : 'New here? <button type="button" data-sw="signup">Create an account</button>';
+  const blocked = () => live && !tok() && used() >= FREE;
+  const MSG = { invalid: 'Wrong email or password.', locked: 'Too many attempts. Try again in 15 minutes.', bad_email: 'Enter a valid email address.', weak: 'Use at least 8 characters for your password.', exists: 'An account with this email already exists. Log in instead.', busy: 'Too many sign-ups right now. Try again in a while.', server: 'Something went wrong on our side. Try again in a moment.' };
+  const post = async o => {
+    const ctl = new AbortController(), t = setTimeout(() => ctl.abort(), 25000);
+    try { return await (await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o), signal: ctl.signal })).json(); }
+    finally { clearTimeout(t); }
   };
-  const openM = (md, msg) => { closeSide(); view(md, msg); if (!live && md !== 'account') err.textContent = 'Add your Apps Script URL to API_URL first.'; m.hidden = false; pw.value = ''; if (md !== 'account') (em.value ? pw : em).focus(); };
-  const showGate = () => { if (!blocked() || feed.querySelector('.gate')) return; const g = document.createElement('div'); g.className = 'gate'; g.innerHTML = '<h3>Log in or create an account to continue</h3><p>Your first search is free. Sign up to keep searching and save your history.</p><div class="row" style="justify-content:center"><button class="btn" data-auth="login">Log in</button><button class="btn pri" data-auth="signup">Create account</button></div>'; feed.appendChild(g); toEnd(); };
-  const signOut = () => { setSession('', '', ''); m.hidden = true; d.hidden = true; };
+  let mode = 'login', pending = '', working = false;
+
+  const sync = () => {
+    $('#ownTx').textContent = tok() ? mail() : 'Log in';
+    q.placeholder = blocked() ? 'Log in to keep searching' : ph0;
+    const left = Math.max(0, FREE - used());
+    note.textContent = live && !tok() ? (left ? `${plural(left, 'free search')} left. Log in for unlimited searches.` : 'Free searches used. Log in to keep searching.') : note0;
+    if (!blocked()) document.querySelectorAll('.gate').forEach(x => x.remove());
+  };
+  const setSession = (t, e, r) => { ls.set('shophai.tok', t); ls.set('shophai.email', e); ls.set('shophai.role', r); sync(); };
+
+  // ----- full-page login / signup -----
+  const label = () => mode === 'signup' ? 'Create account' : 'Log in';
+  const fail = m => { err.textContent = m; return false; };
+  const view = (md, msg) => {
+    mode = md; const su = md === 'signup';
+    $('#tLogin').classList.toggle('on', !su); $('#tSignup').classList.toggle('on', su);
+    $('#tLogin').setAttribute('aria-selected', String(!su)); $('#tSignup').setAttribute('aria-selected', String(su));
+    $('#aT').textContent = su ? 'Create your account' : 'Welcome back';
+    $('#aP').textContent = su ? 'Free, and it only takes a few seconds.' : 'Log in to keep searching and save your history.';
+    $('#aL2').hidden = !su; $('#aHint').hidden = !su;
+    pw.autocomplete = su ? 'new-password' : 'current-password';
+    go.textContent = label(); err.textContent = '';
+    $('#aNote').hidden = !msg; $('#aNote').textContent = msg || '';
+    $('#aSw').innerHTML = su ? 'Already have an account? <button type="button" data-mode="login">Log in</button>' : 'New here? <button type="button" data-mode="signup">Create an account</button>';
+    $('#aClose').hidden = blocked();
+  };
+  const openPage = (md, msg) => {
+    closeSide(); $('#acctModal').hidden = true; view(md, msg);
+    if (!live) err.textContent = 'Add your Apps Script URL to API_URL first.';
+    pg.hidden = false; pw.value = pw2.value = ''; setTimeout(() => em.focus(), 30);
+  };
+  const closePage = () => { pg.hidden = true; pw.value = pw2.value = ''; err.textContent = ''; };
+  const showGate = () => {
+    if (!blocked() || feed.querySelector('.gate')) return;
+    const g = document.createElement('div'); g.className = 'gate';
+    g.innerHTML = `<h3>You’ve used your ${FREE} free searches</h3><p>Log in or create a free account to keep searching and save your history.</p><div class="row" style="justify-content:center"><button class="btn" data-auth="login">Log in</button><button class="btn pri" data-auth="signup">Create account</button></div>`;
+    feed.appendChild(g); toEnd();
+  };
+  const signOut = () => {
+    setSession('', '', ''); ac.hidden = true; d.hidden = true; d.innerHTML = '';
+    if (blocked()) openPage('login', 'You’re signed out. Log in to keep searching.');
+  };
+
+  // ----- account modal (signed-in users) -----
+  const openAcct = () => { closeSide(); $('#acP').textContent = 'Signed in as ' + mail() + (isOwner() ? ' (owner)' : ''); $('#acDash').hidden = !isOwner(); ac.hidden = false; };
+
+  // ----- owner dashboard -----
   const bars = (a, k, v) => { const mx = Math.max(1, ...a.map(x => x[v])); return a.length ? a.map(x => `<div class="br"><span>${esc(x[k])}</span><b>${x[v]}</b><i><u style="width:${x[v] / mx * 100}%"></u></i></div>`).join('') : '<div class="emp2">Nothing yet.</div>'; };
   const when = t => new Date(t).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
   const draw = s => {
     const mx = Math.max(1, ...s.days.map(x => x.n));
     d.innerHTML = `<div class="dh"><h2>Owner dashboard</h2><button class="btn" id="dRef">Refresh</button><button class="btn" id="dOut">Sign out</button><button class="btn pri" id="dClose">Close</button></div>
     <div class="db"><div class="kp"><div class="pn"><h3>Total searches</h3><b>${s.total}</b></div><div class="pn"><h3>Today</h3><b>${s.today}</b></div><div class="pn"><h3>Last 7 days</h3><b>${s.week}</b></div><div class="pn"><h3>Unique queries</h3><b>${s.unique}</b></div></div>
-    <div class="pn"><h3>Searches per day, last 14 days</h3><div class="days">${s.days.map(x => `<div style="height:${x.n / mx * 100}%" title="${x.d}: ${x.n}"></div>`).join('')}</div></div>
+    <div class="pn"><h3>Searches per day, last 14 days</h3><div class="days">${s.days.map(x => `<div style="height:${x.n / mx * 100}%" title="${esc(x.d)}: ${x.n}"></div>`).join('')}</div></div>
     <div class="two"><div class="pn"><h3>Top searches</h3>${bars(s.top, 'q', 'n')}</div><div class="pn"><h3>Where results came from</h3>${bars(s.sources, 's', 'n')}<h3 style="margin-top:16px">Searches with no results</h3>${bars(s.zero, 'q', 'n')}</div></div>
     <div class="pn"><h3>Recent searches</h3><div class="tw"><table class="tb">${s.recent.map(r => `<tr><td>${when(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${r[3]} found</td></tr>`).join('') || '<tr><td>No searches logged yet.</td></tr>'}</table></div></div>
     <div class="emp2">Based on the latest ${s.sampled} logged searches.</div></div>`;
@@ -435,32 +515,52 @@ window.Auth = (() => {
   };
   async function load() {
     d.hidden = false; if (!d.innerHTML) d.innerHTML = '<div class="dh"><h2>Loading…</h2></div>';
-    try { const r = await post({ action: 'stats', token: tok() }); if (r.ok) return draw(r.stats); if (r.error === 'auth') { signOut(); openM('login', 'Session expired. Log in again.'); return; } throw 0; }
+    try { const r = await post({ action: 'stats', token: tok() }); if (r.ok) return draw(r.stats); if (r.error === 'auth') { setSession('', '', ''); d.hidden = true; d.innerHTML = ''; openPage('login', 'Session expired. Log in again.'); return; } throw 0; }
     catch (_) { d.innerHTML = '<div class="dh"><h2>Couldn’t load the dashboard</h2><button class="btn" id="dRef">Try again</button><button class="btn pri" id="dClose">Close</button></div>'; $('#dRef').onclick = load; $('#dClose').onclick = () => d.hidden = true; }
   }
-  $('#owner').onclick = () => openM(tok() ? 'account' : 'login');
-  $('#ownCancel').onclick = () => m.hidden = true;
-  $('#amDash').onclick = () => { m.hidden = true; d.innerHTML = ''; load(); };
-  m.addEventListener('mousedown', e => { if (e.target === m) m.hidden = true; });
-  addEventListener('keydown', e => { if (e.key === 'Escape') { m.hidden = true; d.hidden = true; } });
-  document.addEventListener('click', e => { const b = e.target.closest('[data-auth]'); if (b) openM(b.dataset.auth); const w = e.target.closest('[data-sw]'); if (w) view(w.dataset.sw); });
-  $('#ownForm').addEventListener('submit', async e => {
-    e.preventDefault();
-    if (mode === 'account') return signOut();
-    if (!live) { err.textContent = 'Add your Apps Script URL to API_URL first.'; return; }
-    if (!em.value || !pw.value) { err.textContent = 'Enter your email and password.'; return; }
-    const t0 = go.textContent; go.disabled = true; go.textContent = 'Please wait…'; err.textContent = '';
-    try {
-      const r = await post({ action: mode, email: em.value, pass: pw.value });
-      if (r.ok) { setSession(r.token, r.email, r.role); m.hidden = true; if (r.role === 'owner') { d.innerHTML = ''; load(); } }
-      else err.textContent = MSG[r.error] || 'Something went wrong. Try again.';
-    } catch (_) { err.textContent = 'Couldn’t reach the server. Check your connection.'; }
-    go.disabled = false; go.textContent = t0; pw.value = '';
+
+  // ----- events -----
+  $('#owner').onclick = () => tok() ? openAcct() : openPage('login');
+  $('#aClose').onclick = () => { if (!blocked()) closePage(); };
+  $('#acClose').onclick = () => ac.hidden = true;
+  $('#acOut').onclick = signOut;
+  $('#acDash').onclick = () => { ac.hidden = true; d.innerHTML = ''; load(); };
+  ac.addEventListener('mousedown', e => { if (e.target === ac) ac.hidden = true; });
+  $('#aEye').onclick = () => { const show = pw.type === 'password'; pw.type = pw2.type = show ? 'text' : 'password'; $('#aEye').textContent = show ? 'Hide' : 'Show'; };
+  addEventListener('keydown', e => { if (e.key !== 'Escape') return; if (!pg.hidden && !blocked()) closePage(); ac.hidden = true; d.hidden = true; });
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-auth]'); if (b) openPage(b.dataset.auth);
+    const m = e.target.closest('[data-mode]'); if (m && pg.contains(m)) { view(m.dataset.mode); (em.value ? pw : em).focus(); }
   });
+  $('#authForm').addEventListener('submit', async e => {
+    e.preventDefault(); if (working) return;
+    if (!live) return fail('Add your Apps Script URL to API_URL first.');
+    const email = em.value.trim().toLowerCase(), pass = pw.value, su = mode === 'signup';
+    err.textContent = '';
+    if (!EMAIL.test(email) || email.length > 120) return fail('Enter a valid email address.');
+    if (!pass) return fail('Enter your password.');
+    if (su) {
+      if (pass.length < 8) return fail(MSG.weak);
+      if (pass.length > 100) return fail('Password is too long (100 characters max).');
+      if (pass !== pw2.value) return fail('Passwords don’t match.');
+    }
+    working = true; go.disabled = true; go.textContent = su ? 'Creating account…' : 'Logging in…';
+    try {
+      const r = await post({ action: mode, email, pass });
+      if (r && r.ok) {
+        setSession(r.token, r.email, r.role); closePage(); em.value = '';
+        const p = pending; pending = ''; if (p) search(p);
+      } else fail(MSG[r && r.error] || 'Something went wrong. Try again.');
+    } catch (_) { fail('Couldn’t reach the server. Check your connection and try again.'); }
+    finally { working = false; go.disabled = false; go.textContent = label(); pw.value = pw2.value = ''; }
+  });
+
   sync();
   if (live && tok()) post({ action: 'me', token: tok() }).then(r => { if (!r.ok && r.error === 'auth') setSession('', '', ''); }).catch(() => {});
   return {
-    gate() { if (!blocked()) return false; showGate(); openM('login', 'Log in or create an account to continue'); return true; },
+    // Returns true (and opens the login/signup page) when the visitor has used up their free searches.
+    gate(text) { if (!blocked()) return false; if (text) pending = text; showGate(); openPage('login', `You’ve used your ${FREE} free searches. Log in or create a free account to keep searching.`); return true; },
+    // Called after each completed search: counts guest searches, and shows the inline prompt once the limit is reached.
     after() { if (live && !tok()) { ls.set('shophai.guest', String(used() + 1)); sync(); showGate(); } }
   };
 })();
