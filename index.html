@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>shoph.ai: compare prices across stores</title>
+<meta name="description" content="Tell shoph.ai what you want to buy and compare prices across stores. Free.">
+<style>
+:root{--bg:#faf9f5;--panel:#f3f1ea;--card:#fff;--ink:#1f1e1d;--mut:#6b6860;--line:#e5e2d8;--hov:#ebe8de;--acc:#c15f3c;--accd:#a94e2f;--onacc:#fff;--ok:#2f7d4f;--warn:#b7791f;--sh:0 4px 20px rgba(40,30,20,.08);--serif:ui-serif,"Iowan Old Style","Palatino Linotype",Georgia,serif;--sans:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color-scheme:light}
+:root[data-theme=dark]{--bg:#262624;--panel:#1f1e1d;--card:#30302e;--ink:#f0eee6;--mut:#a29f95;--line:#41403c;--hov:#2e2d2b;--acc:#d97757;--accd:#e48a6b;--onacc:#1f1e1d;--ok:#6fcf97;--warn:#e5b45a;--sh:0 4px 20px rgba(0,0,0,.4);color-scheme:dark}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;height:100dvh}
+body{background:var(--bg);color:var(--ink);font:15px/1.55 var(--sans);display:flex;overflow:hidden;-webkit-font-smoothing:antialiased}
+button,input,select{font:inherit;color:inherit}button{cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.side{width:272px;margin-left:0;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:14px 10px;gap:10px;flex-shrink:0;transition:transform .25s,margin-left .25s}
+body.collapsed .side{margin-left:-272px}
+.cbtn{margin-left:auto;border:0;background:transparent;padding:6px;border-radius:8px;display:grid;color:var(--mut)}.cbtn:hover{background:var(--hov);color:var(--ink)}
+.brand{display:flex;align-items:center;gap:8px;padding:2px 8px 6px}
+.logo{font:600 22px var(--serif);letter-spacing:-.01em}.logo i{color:var(--acc);font-style:normal}
+.new{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 12px;font-weight:600;transition:.15s}
+.new:hover{border-color:var(--acc)}
+.hl{font-size:12px;color:var(--mut);padding:8px 10px 2px}
+.hist{flex:1;overflow:auto;display:flex;flex-direction:column;gap:2px}
+.h{display:flex;align-items:center;gap:6px;border:0;background:transparent;text-align:left;padding:8px 10px;border-radius:8px;width:100%}
+.h:hover,.h.on{background:var(--hov)}
+.h span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:14px}
+.h i{font-style:normal;opacity:0;color:var(--mut);padding:0 4px;border-radius:4px}
+.h:hover i,.h:focus-within i{opacity:1}.h i:hover{color:#d14b3b}
+.emp{color:var(--mut);font-size:13px;padding:8px 10px}
+.sf{display:flex;gap:6px;border-top:1px solid var(--line);padding-top:10px}
+.sf button{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;border:0;background:transparent;border-radius:8px;padding:8px;font-size:13px;color:var(--mut)}
+.sf button:hover{background:var(--hov);color:var(--ink)}
+svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.mainw{flex:1;display:flex;flex-direction:column;min-width:0;height:100%;position:relative}
+.top{display:none;min-height:50px;align-items:center;gap:10px;padding:8px 12px;border-bottom:1px solid var(--line)}
+body.collapsed .top{display:flex;border-bottom:0}
+.burger{border:0;background:transparent;padding:6px;border-radius:8px;display:grid}.burger:hover{background:var(--hov)}.burger svg{width:22px;height:22px}
+.scroll{flex:1;overflow:auto;scroll-behavior:smooth}
+.wrap{max-width:960px;margin:0 auto;padding:10px 20px 170px}
+.hero{text-align:center;padding:12vh 0 10px}
+.hero h1{font:500 clamp(30px,5vw,44px)/1.15 var(--serif);letter-spacing:-.02em}
+.hero p{color:var(--mut);margin:12px auto 26px;max-width:480px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:640px;margin:0 auto}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:99px;padding:7px 14px;font-size:13.5px;transition:.15s;display:inline-flex;gap:6px;align-items:center}
+.chip:hover{border-color:var(--acc);background:var(--hov)}
+.chip.on{background:var(--acc);border-color:var(--acc);color:var(--onacc)}
+.demo-note{display:inline-block;margin-top:22px;font-size:12.5px;color:var(--warn);background:color-mix(in srgb,var(--warn) 12%,transparent);border-radius:8px;padding:6px 12px}
+.turn{margin-top:26px;animation:up .3s both}
+@keyframes up{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.user{display:flex;flex-direction:column;align-items:flex-end;gap:2px}
+.acts{display:flex;gap:2px;opacity:0;transition:opacity .15s}
+.turn:hover .acts,.acts:focus-within{opacity:1}
+@media(hover:none){.acts{opacity:1}}
+.acts button{border:0;background:transparent;color:var(--mut);padding:5px;border-radius:7px;display:grid}
+.acts button:hover{background:var(--hov);color:var(--ink)}
+.acts button.ok{color:var(--ok)}
+.edit{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;width:min(100%,560px)}
+.edit input{flex:1;min-width:200px;background:var(--card);border:1px solid var(--acc);border-radius:12px;padding:9px 13px;font-size:16px;outline:0}
+.edit button{border:1px solid var(--line);background:var(--card);border-radius:9px;padding:7px 14px;font-size:13.5px}
+.edit button.sv{background:var(--acc);border-color:var(--acc);color:var(--onacc);font-weight:600}
+.user span{background:var(--hov);padding:9px 15px;border-radius:16px;max-width:80%;word-break:break-word}
+.ans{margin-top:16px}
+.think{padding:2px 0}
+.think ul{list-style:none;padding:0;display:flex;flex-direction:column;gap:10px}
+.think li{display:flex;gap:10px;align-items:flex-start;opacity:.4;transition:opacity .3s}
+.think li.act,.think li.ok{opacity:1}
+.ic{width:16px;height:16px;border-radius:50%;border:2px solid var(--line);flex-shrink:0;margin-top:3px;position:relative}
+li.act .ic{border-color:var(--acc);border-top-color:transparent;animation:spin .8s linear infinite}
+li.ok .ic{background:var(--ok);border-color:var(--ok)}
+li.ok .ic:after{content:"";position:absolute;left:3.5px;top:.5px;width:4px;height:7px;border:solid var(--card);border-width:0 2px 2px 0;transform:rotate(45deg)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.think b{display:block;font-size:14px;font-weight:600}.think small{color:var(--mut);font-size:13px}
+.shimmer{background:linear-gradient(90deg,var(--ink) 35%,var(--acc) 50%,var(--ink) 65%);background-size:200% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sh 1.5s linear infinite}
+@keyframes sh{to{background-position:-200% 0}}
+details.done{color:var(--mut);font-size:13.5px}
+details.done summary{cursor:pointer;list-style:none;display:inline-flex;gap:8px;align-items:center;padding:4px 2px;border-radius:6px}
+details.done summary:hover{color:var(--ink)}
+details.done summary::-webkit-details-marker{display:none}
+details.done summary:after{content:"\203A";transition:.2s}details[open] summary:after{transform:rotate(90deg)}
+details.done ul{margin:8px 0 0 4px;padding-left:12px;border-left:2px solid var(--line);list-style:none;display:flex;flex-direction:column;gap:6px}
+.sum{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0 4px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 14px;min-width:104px}
+.stat small{display:block;color:var(--mut);font-size:12px}.stat b{font:600 18px var(--serif)}.stat.g b{color:var(--ok)}
+.tools{position:sticky;top:0;z-index:4;background:var(--bg);padding:10px 0 8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tools select,.tools input[type=number]{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 10px;font-size:13.5px}
+.tools input[type=number]{width:92px}
+.tools label{font-size:13.5px;color:var(--mut);display:flex;gap:6px;align-items:center;cursor:pointer}
+.tools .rs{border:0;background:transparent;color:var(--acc);font-size:13px;padding:6px}
+.stores{display:flex;flex-wrap:wrap;gap:6px;padding-bottom:6px}
+.stores .chip{font-size:12.5px;padding:4px 11px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin:8px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s,border-color .2s;animation:up .35s both}
+.card:hover{box-shadow:var(--sh);border-color:color-mix(in srgb,var(--acc) 50%,var(--line))}
+.img{aspect-ratio:1;background:#fff;display:grid;place-items:center;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.img img{max-width:86%;max-height:86%;object-fit:contain}
+.img.ph:after{content:"No image";color:#9a968c;font-size:12px}
+.bd{position:absolute;top:8px;left:8px;font-size:11.5px;font-weight:600;color:#fff;border-radius:6px;padding:2px 8px;background:var(--ok)}
+.bd.p{background:var(--accd)}.bd.a{background:var(--warn)}
+.dm{position:absolute;top:8px;right:8px;background:#0007;color:#fff;font-size:10.5px;border-radius:6px;padding:2px 6px}
+.cb{padding:12px 14px 14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.t{font-size:13.5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:40px}
+.pr{font:600 21px var(--serif)}.pr s{font:400 12.5px var(--sans);color:var(--mut);margin-left:6px}
+.mt{font-size:12.5px;color:var(--mut);display:flex;justify-content:space-between;gap:8px}.mt span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.go{margin-top:auto;text-align:center;text-decoration:none;background:var(--acc);color:var(--onacc);border-radius:9px;padding:9px;font-weight:600;font-size:13.5px;transition:.15s}
+.go:hover{background:var(--accd)}
+.links{font-size:13px;color:var(--mut);margin:14px 0;display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center}
+.links a{color:var(--acc);text-decoration:none;white-space:nowrap}.links a:hover{text-decoration:underline}
+.none{padding:26px;text-align:center;color:var(--mut);grid-column:1/-1}
+.bar{position:absolute;left:0;right:0;bottom:0;background:linear-gradient(transparent,var(--bg) 45%);padding:30px 16px 14px;pointer-events:none}
+form{pointer-events:auto;max-width:760px;margin:0 auto;display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--line);border-radius:22px;padding:7px 7px 7px 18px;box-shadow:var(--sh);transition:border-color .15s}
+form:focus-within{border-color:var(--acc)}
+form input{flex:1;border:0;outline:0;background:transparent;font-size:16px;padding:8px 0;min-width:0}
+form .mic{background:transparent;color:var(--mut)}form .mic:hover{background:var(--hov);color:var(--ink)}
+form .mic.on{background:color-mix(in srgb,var(--acc) 16%,transparent);color:var(--acc);animation:pulse 1.3s ease-out infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--acc) 45%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
+form button{border:0;background:var(--acc);color:var(--onacc);width:38px;height:38px;border-radius:12px;display:grid;place-items:center;transition:.15s}
+form button:hover{background:var(--accd)}form button:disabled{opacity:.4;cursor:default}
+.note{text-align:center;font-size:12px;color:var(--mut);margin-top:8px}
+.ov{display:none}
+@media(max-width:800px){.side{position:fixed;inset:0 auto 0 0;z-index:20;transform:translateX(-100%)}.side.open{transform:none;box-shadow:var(--sh)}.ov.open{display:block;position:fixed;inset:0;background:#0006;z-index:19}.top{display:flex}.hero{padding-top:7vh}.wrap{padding:6px 14px 170px}}
+@media(max-width:800px){body.collapsed .side{margin-left:0}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.cb{padding:10px}.pr{font-size:18px}.stat{min-width:0;flex:1 1 40%}.tools select,.tools input[type=number]{font-size:16px}.tools{gap:6px}.tools input[type=number]{width:calc(50% - 4px)}.user span{max-width:92%}.bar{padding:24px 10px calc(10px + env(safe-area-inset-bottom))}.note{display:none}.hero h1{font-size:28px}.side{width:min(300px,85vw)}}
+@media(max-width:360px){.grid{grid-template-columns:1fr}}
+@media(min-width:1400px){.wrap{max-width:1120px}}
+.own{display:flex;align-items:center;gap:8px;border:0;background:transparent;border-radius:8px;padding:8px 10px;font-size:13px;color:var(--mut);width:100%;text-align:left}.own:hover{background:var(--hov);color:var(--ink)}
+.modal{position:fixed;inset:0;z-index:40;background:#0007;display:grid;place-items:center;padding:16px}.modal[hidden],.dash[hidden]{display:none}
+.mc{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:24px;width:min(380px,100%);box-shadow:var(--sh);display:flex;flex-direction:column;gap:12px}
+.mc h2{font:500 22px var(--serif)}.mc p{color:var(--mut);font-size:13.5px}
+.mc input{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px 13px;font-size:16px;outline:0}.mc input:focus{border-color:var(--acc)}
+.err{color:#d14b3b;font-size:13px;min-height:18px}
+.btn{border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 16px;font-weight:600;font-size:14px}.btn.pri{background:var(--acc);border-color:var(--acc);color:var(--onacc)}.btn:disabled{opacity:.5}
+.row{display:flex;gap:8px;justify-content:flex-end}
+.dash{position:fixed;inset:0;z-index:30;background:var(--bg);overflow:auto}
+.dh{position:sticky;top:0;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;gap:10px;z-index:2}.dh h2{font:500 21px var(--serif);flex:1}
+.db{max-width:1000px;margin:0 auto;padding:18px 20px 50px;display:grid;gap:16px}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.pn{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}.pn h3{font-size:13.5px;color:var(--mut);font-weight:500;margin-bottom:10px}
+.kp .pn b{font:600 26px var(--serif);display:block}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.br{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;margin-bottom:8px;font-size:13.5px}.br span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.br i{grid-column:1/-1;height:6px;background:var(--hov);border-radius:9px;overflow:hidden;display:block}.br i u{display:block;height:100%;background:var(--acc);border-radius:9px}
+.days{display:flex;align-items:flex-end;gap:5px;height:120px}.days div{flex:1;background:var(--acc);border-radius:5px 5px 0 0;min-height:3px;opacity:.85}.days div:hover{opacity:1}
+.tb{width:100%;border-collapse:collapse;font-size:13px}.tb td{padding:7px 6px;border-top:1px solid var(--line)}.tb td:first-child{color:var(--mut);white-space:nowrap}.tb td:last-child{text-align:right;color:var(--mut)}
+.tw{overflow-x:auto}.emp2{color:var(--mut);font-size:13px}
+@media(max-width:700px){.two{grid-template-columns:1fr}.dh,.db{padding-left:14px;padding-right:14px}}
+.sw{text-align:center;font-size:13.5px;color:var(--mut)}.sw button{border:0;background:none;color:var(--acc);font-weight:600;padding:0 2px}.sw button:hover{text-decoration:underline}
+.gate{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:22px 18px;text-align:center;margin:26px 0 8px;animation:up .3s both}.gate h3{font:500 20px var(--serif);margin-bottom:6px}.gate p{color:var(--mut);font-size:14px;margin-bottom:14px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<aside class="side" id="side">
+ <div class="brand"><span class="logo">shoph<i>.</i>ai</span><button class="cbtn" id="collapse" aria-label="Collapse sidebar" title="Collapse sidebar"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="3"/><path d="M9 4v16"/></svg></button></div>
+ <button class="new" id="newChat"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg> New search</button>
+ <div class="hl">Recent searches</div><div class="hist" id="hist"></div>
+ <button class="own" id="owner"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span id="ownTx">Log in</span></button>
+ <div class="sf"><button id="theme" aria-label="Toggle theme"><span id="themeIc"></span><span id="themeTx"></span></button><button id="clear"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg> Clear all</button></div>
+</aside>
+<div class="ov" id="ov"></div>
+<div class="mainw">
+ <div class="top"><button class="burger" id="burger" aria-label="Open sidebar" title="Open sidebar"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><span class="logo">shoph<i>.</i>ai</span></div>
+ <div class="scroll" id="scroll"><div class="wrap">
+  <section class="hero" id="hero">
+   <h1>What are you shopping for?</h1>
+   <p>Describe it the way you would to a friend. Try “running shoes under 2000” or “cheapest earbuds”.</p>
+   <div class="chips" id="chips"></div><div id="demoNote"></div>
+  </section>
+  <div id="feed"></div>
+ </div></div>
+ <div class="bar"><form id="f" autocomplete="off"><input id="q" placeholder="Search for a product, add a budget if you like" maxlength="100" aria-label="Search" autofocus><button type="button" class="mic" id="mic" aria-label="Search by voice" title="Search by voice" hidden><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button><button id="go" aria-label="Search"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></form>
+ <div class="note">Prices change often. Confirm on the store page before you buy.</div></div>
+</div>
+<div class="modal" id="ownModal" hidden><form class="mc" id="ownForm"><h2 id="amT">Log in</h2><p id="amP"></p><div id="amF" style="display:grid;gap:12px"><input type="email" id="ownEm" placeholder="Email" aria-label="Email" autocomplete="username"><input type="password" id="ownPw" placeholder="Password" aria-label="Password" autocomplete="current-password"></div><div class="err" id="ownErr" role="alert"></div><div class="row"><button type="button" class="btn" id="ownCancel">Close</button><button type="button" class="btn" id="amDash" hidden>Open dashboard</button><button class="btn pri" id="ownGo">Log in</button></div><div class="sw" id="amSw"></div></form></div>
+<div class="dash" id="dash" hidden></div>
+<script>
+const API_URL = 'https://script.google.com/macros/s/AKfycbwfW8rfH8rNZURHw2-7MJE25TumQ_mnuepl54cXApnf64UsNRYSHwg6LrgLVmurzfoO/exec';
+
+const USD_INR = 85, TTL = 6 * 3600e3, LS = 'shophai.chats.v1';
+const SUGG = ['📱 smartphone', '👟 running shoes', '💻 laptop under 50000', '🎧 cheapest earbuds', '⌚ smartwatch', '🎒 backpack', '🕶 sunglasses', '🧴 perfume under 1000'];
+const SORTS = { rel: 'Relevance', pa: 'Price: low to high', pd: 'Price: high to low', rt: 'Top rated', ds: 'Biggest discount' };
+const $ = s => document.querySelector(s);
+const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const safe = u => /^https?:\/\//i.test(u || '') ? u : '#';
+const inr = n => '₹' + Math.round(n).toLocaleString('en-IN');
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const plural = (n, w) => n + ' ' + w + (n === 1 ? '' : 's');
+// ---------- storage ----------
+let chats = (() => { try { return JSON.parse(localStorage.getItem(LS)) || []; } catch (_) { return []; } })();
+let active = null, busy = false;
+function save() {
+  chats.sort((a, b) => b.ts - a.ts); chats = chats.slice(0, 30);
+  try { localStorage.setItem(LS, JSON.stringify(chats)); }
+  catch (_) { chats = chats.slice(0, 8); try { localStorage.setItem(LS, JSON.stringify(chats)); } catch (__) {} }
+}
+
+// ---------- prompt understanding ----------
+function parsePrompt(text) {
+  let q = ' ' + text.toLowerCase() + ' ', max = 0, min = 0, sort = 'rel';
+  const val = (n, k) => Number(String(n).replace(/,/g, '')) * (k ? 1000 : 1);
+  q = q.replace(/\b(under|below|less than|upto|up to|within|max)\s*(?:rs\.?|₹)?\s*(\d[\d,]*)\s*(k)?/g, (_, a, n, k) => { max = val(n, k); return ' '; });
+  q = q.replace(/\b(above|over|more than|min)\s*(?:rs\.?|₹)?\s*(\d[\d,]*)\s*(k)?/g, (_, a, n, k) => { min = val(n, k); return ' '; });
+  if (/\b(cheapest|lowest price|cheap)\b/.test(q)) { sort = 'pa'; q = q.replace(/\b(cheapest|lowest price|cheap)\b/g, ' '); }
+  if (/\b(best|top rated|highest rated)\b/.test(q)) { sort = 'rt'; q = q.replace(/\b(best|top rated|highest rated)\b/g, ' '); }
+  q = q.replace(/\b(i want to buy|i want|buy me|show me|find me|please|for me)\b/g, ' ').replace(/\s+/g, ' ').trim();
+  return { q: q || text.trim().toLowerCase(), max, min, sort };
+}
+
+// ---------- data: local cache -> Apps Script -> demo fallback; never throws ----------
+async function getItems(q) {
+  const ck = 'shophai.q:' + q;
+  try { const c = JSON.parse(localStorage.getItem(ck)); if (c && Date.now() - c.t < TTL && c.d.length) return c.d; } catch (_) {}
+  let items = [];
+  if (!API_URL.startsWith('PASTE')) {
+    try { const r = await fetch(API_URL + '?q=' + encodeURIComponent(q)); items = (await r.json()).items || []; } catch (_) {}
+  }
+  if (!items.length) items = await demo(q);
+  items = items.slice(0, 30);
+  if (items.length) { try { localStorage.setItem(ck, JSON.stringify({ t: Date.now(), d: items })); } catch (_) {} }
+  return items;
+}
+async function demo(q) {
+  const words = q.split(/\s+/).filter(w => w.length > 2); let raw = [];
+  for (const t of [q, ...words]) {
+    if (raw.length >= 12) break;
+    try { const r = await fetch('https://dummyjson.com/products/search?limit=20&q=' + encodeURIComponent(t)); raw = raw.concat((await r.json()).products || []); } catch (_) {}
+  }
+  const seen = new Set();
+  return raw.filter(p => !seen.has(p.id) && seen.add(p.id)).map(p => {
+    const price = Math.round(p.price * USD_INR), off = p.discountPercentage || 0;
+    return { id: 'd' + p.id, title: p.title, price, mrp: off > 1 ? Math.round(price / (1 - off / 100)) : 0, img: p.thumbnail || '', store: 'Demo catalog', url: 'https://www.amazon.in/s?k=' + encodeURIComponent(p.title), rating: p.rating || 0, reviews: (p.reviews || []).length, demo: true };
+  });
+}
+const storeLinks = q => { const e = encodeURIComponent(q), h = encodeURIComponent(q.trim().replace(/\s+/g, '-')); return [
+  ['Amazon.in', 'https://www.amazon.in/s?k=' + e], ['Flipkart', 'https://www.flipkart.com/search?q=' + e], ['Meesho', 'https://www.meesho.com/search?q=' + e],
+  ['Myntra', 'https://www.myntra.com/' + h], ['Ajio', 'https://www.ajio.com/search/?text=' + e], ['Croma', 'https://www.croma.com/searchB?q=' + e + '%3Arelevance&text=' + e],
+  ['Snapdeal', 'https://www.snapdeal.com/search?keyword=' + e], ['Tata CLiQ', 'https://www.tatacliq.com/search/?searchCategory=all&text=' + e], ['Google Shopping', 'https://www.google.com/search?tbm=shop&gl=in&q=' + e]]; };
+const linksHtml = q => `<div class="links">Also search “${esc(q)}” on: ${storeLinks(q).map(([n, u]) => `<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${n} ↗</a>`).join('')}</div>`;
+
+
+// ---------- progress (uses real result counts, no fake store list) ----------
+async function think(box, p, dataP) {
+  const t0 = Date.now();
+  const crit = `“${p.q}”` + (p.max ? ` under ${inr(p.max)}` : '') + (p.min ? ` above ${inr(p.min)}` : '') + (p.sort !== 'rel' ? `, sorted by ${SORTS[p.sort].toLowerCase()}` : '');
+  const steps = [['Understanding your request', crit], ['Finding listings', 'Looking for matching products…'], ['Comparing price, rating and discount', 'Ranking what we found…']];
+  box.innerHTML = `<ul>${steps.map(s => `<li><span class="ic"></span><div><b>${s[0]}</b><small>${esc(s[1])}</small></div></li>`).join('')}</ul>`;
+  const lis = [...box.querySelectorAll('li')], sm = i => lis[i].querySelector('small');
+  const run = async (i, work) => { lis[i].classList.add('act'); lis[i].querySelector('b').classList.add('shimmer'); await work; lis[i].classList.remove('act'); lis[i].classList.add('ok'); lis[i].querySelector('b').classList.remove('shimmer'); };
+  await run(0, sleep(450));
+  await run(1, Promise.all([dataP, sleep(600)]));
+  const items = await dataP, n = items.length, st = new Set(items.map(i => i.store)).size, demo = n && items.every(i => i.demo);
+  const found = !n ? 'No listings matched' : demo ? plural(n, 'sample product') : `${plural(n, 'listing')} from ${plural(st, 'store')}`;
+  sm(1).textContent = found;
+  await run(2, sleep(450));
+  sm(2).textContent = n ? `Lowest ${inr(Math.min(...items.map(i => i.price)))}, highest ${inr(Math.max(...items.map(i => i.price)))}` : 'Nothing to rank';
+  const secs = ((Date.now() - t0) / 1000).toFixed(1), det = [steps[0][1], found, sm(2).textContent];
+  box.innerHTML = `<details class="done"><summary>${esc(found)} · ${secs}s</summary><ul>${steps.map((s, i) => `<li><b>${s[0]}</b>: ${esc(det[i])}</li>`).join('')}</ul></details>`;
+}
+// ---------- results ----------
+function renderResults(host, msg) {
+  const { items, p } = msg;
+  if (!items.length) { host.innerHTML = `<div class="none">We couldn’t find “${esc(p.q)}”. Try a simpler name, or search the stores directly:</div>` + linksHtml(p.q); return; }
+  const stores = [...new Set(items.map(i => i.store))].slice(0, 12), isDemo = items.every(i => i.demo);
+  const pct = i => i.mrp > i.price ? 1 - i.price / i.mrp : 0;
+  const low = items.reduce((a, b) => b.price < a.price ? b : a), top = items.reduce((a, b) => (b.rating || 0) > (a.rating || 0) ? b : a), deal = items.reduce((a, b) => pct(b) > pct(a) ? b : a);
+  host.innerHTML = `<div class="sum"></div>
+  <div class="tools"><select data-k="so">${Object.entries(SORTS).map(([k, v]) => `<option value="${k}">${v}</option>`).join('')}</select>
+   <input data-k="mn" type="number" min="0" placeholder="Min ₹"><input data-k="mx" type="number" min="0" placeholder="Max ₹">
+   <select data-k="rt"><option value="0">Any rating</option><option value="3">3★ &amp; up</option><option value="4">4★ &amp; up</option></select>
+   <label><input type="checkbox" data-k="dl"> Deals only</label><button type="button" class="rs" data-k="rs" hidden>Reset filters</button></div>
+  <div class="stores">${isDemo ? '' : stores.map(s => `<button type="button" class="chip" data-s="${esc(s)}">${esc(s)}</button>`).join('')}</div>
+  <div class="grid"></div>${linksHtml(p.q)}`;
+  const g = k => host.querySelector(`[data-k=${k}]`);
+  g('so').value = p.sort; g('mn').value = p.min || ''; g('mx').value = p.max || '';
+  const apply = () => {
+    const dirty = !!(+g('mn').value || +g('mx').value || +g('rt').value || g('dl').checked || host.querySelector('.stores .chip.on'));
+    g('rs').hidden = !dirty;
+    const mn = +g('mn').value || 0, mx = +g('mx').value || 0, rt = +g('rt').value || 0, dl = g('dl').checked, so = g('so').value;
+    const on = [...host.querySelectorAll('.stores .chip.on')].map(c => c.dataset.s);
+    let a = items.filter(i => (!mn || i.price >= mn) && (!mx || i.price <= mx) && (!rt || i.rating >= rt) && (!dl || pct(i) >= .1) && (!on.length || on.includes(i.store)));
+    const S = { pa: (x, y) => x.price - y.price, pd: (x, y) => y.price - x.price, rt: (x, y) => y.rating - x.rating || y.reviews - x.reviews, ds: (x, y) => pct(y) - pct(x) };
+    if (S[so]) a = a.slice().sort(S[so]);
+    const avg = a.length ? a.reduce((s, i) => s + i.price, 0) / a.length : 0;
+    host.querySelector('.sum').innerHTML = a.length ? `<div class="stat g"><small>Lowest</small><b>${inr(Math.min(...a.map(i => i.price)))}</b></div><div class="stat"><small>Average</small><b>${inr(avg)}</b></div><div class="stat"><small>Highest</small><b>${inr(Math.max(...a.map(i => i.price)))}</b></div><div class="stat"><small>Showing</small><b>${a.length}/${items.length}</b></div>` + (items.every(i => i.demo) ? '<div class="stat"><small>Source</small><b style="font-size:14px">Sample catalog</b></div>' : `<div class="stat"><small>Stores</small><b>${stores.length}</b></div>`) : '';
+    host.querySelector('.grid').innerHTML = a.length ? a.map((i, n) => {
+      const d = Math.round(pct(i) * 100);
+      const badge = i === low ? '<span class="bd">Lowest price</span>' : i === top && i.rating ? '<span class="bd a">Top rated</span>' : i === deal && d >= 10 ? '<span class="bd p">Best deal</span>' : d ? `<span class="bd">${d}% OFF</span>` : '';
+      return `<article class="card" style="animation-delay:${Math.min(n, 12) * 40}ms"><div class="img${i.img ? '' : ' ph'}">${i.img ? `<img loading="lazy" referrerpolicy="no-referrer" src="${esc(safe(i.img))}" alt="" onerror="this.parentNode.classList.add('ph');this.remove()">` : ''}${badge}${i.demo ? '<span class="dm">DEMO</span>' : ''}</div>
+      <div class="cb"><div class="t">${esc(i.title)}</div><div class="pr">${inr(i.price)}${d ? `<s>${inr(i.mrp)}</s>` : ''}</div>
+      <div class="mt"><span>${esc(i.store)}</span><span>${i.rating ? '★ ' + Number(i.rating).toFixed(1) : ''}</span></div>
+      <a class="go" href="${esc(safe(i.url))}" target="_blank" rel="noopener noreferrer">View deal</a></div></article>`; }).join('')
+      : '<div class="none">Nothing matches these filters. Try loosening them or use Reset filters.</div>';
+  };
+  host.querySelector('.tools').addEventListener('input', apply);
+  g('rs').onclick = () => { g('mn').value = g('mx').value = ''; g('rt').value = '0'; g('dl').checked = false; host.querySelectorAll('.stores .chip.on').forEach(c => c.classList.remove('on')); apply(); };
+  host.querySelectorAll('.stores .chip').forEach(c => c.onclick = () => { c.classList.toggle('on'); apply(); });
+  apply();
+}
+
+// ---------- chat flow ----------
+const feed = $('#feed'), scroller = $('#scroll');
+const toEnd = () => scroller.scrollTo({ top: scroller.scrollHeight, behavior: 'smooth' });
+const ICON = { copy: '<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>', ok: '<svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>' };
+function turnShell(text, i) {
+  const s = document.createElement('section'); s.className = 'turn'; s.dataset.i = i;
+  s.innerHTML = `<div class="user"><span></span><div class="acts"><button data-a="copy" title="Copy prompt" aria-label="Copy prompt">${ICON.copy}</button><button data-a="edit" title="Edit prompt" aria-label="Edit prompt"><svg viewBox="0 0 24 24"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg></button><button data-a="retry" title="Retry search" aria-label="Retry search"><svg viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button></div></div><div class="ans"><div class="ansbody"><div class="think"></div><div class="res"></div></div></div>`;
+  s.querySelector('.user span').textContent = text;
+  return s;
+}
+async function runTurn(sec, chat, text, idx, fresh) {
+  if (Auth.gate()) return;
+  busy = true; $('#go').disabled = true;
+  try {
+    const p = parsePrompt(text);
+    if (fresh) { try { localStorage.removeItem('shophai.q:' + p.q); } catch (_) {} }
+    sec.querySelector('.user span').textContent = text;
+    const body = sec.querySelector('.ansbody'); let th = body.querySelector('.think');
+    if (!th) { th = document.createElement('div'); th.className = 'think'; body.prepend(th); }
+    th.innerHTML = ''; body.querySelector('.res').innerHTML = '';
+    const dataP = getItems(p.q); toEnd();
+    await think(th, p, dataP);
+    const items = await dataP, msg = { text, p, items, ts: Date.now() };
+    chat.msgs[idx] = msg; if (idx === 0) chat.title = text.slice(0, 50);
+    chat.ts = Date.now(); save(); renderHist();
+    renderResults(body.querySelector('.res'), msg); toEnd(); Auth.after();
+  } finally { busy = false; $('#go').disabled = false; }
+}
+async function search(text) {
+  text = text.trim(); if (!text || busy) return; if (Auth.gate()) { $('#q').value = text; return; } closeSide();
+  $('#hero').style.display = 'none';
+  let chat = chats.find(c => c.id === active);
+  if (!chat) { chat = { id: Date.now().toString(36), title: text.slice(0, 50), ts: Date.now(), msgs: [] }; chats.unshift(chat); active = chat.id; }
+  const idx = chat.msgs.length, sec = turnShell(text, idx);
+  feed.appendChild(sec); toEnd();
+  await runTurn(sec, chat, text, idx, false);
+}
+// prompt actions: copy, edit, retry
+const copyText = async t => { try { await navigator.clipboard.writeText(t); } catch (_) { const a = document.createElement('textarea'); a.value = t; document.body.appendChild(a); a.select(); try { document.execCommand('copy'); } catch (__) {} a.remove(); } };
+feed.addEventListener('click', async e => {
+  const btn = e.target.closest('[data-a]'); if (!btn) return;
+  const sec = btn.closest('.turn'), chat = chats.find(c => c.id === active), idx = +sec.dataset.i;
+  const text = (chat && chat.msgs[idx] && chat.msgs[idx].text) || sec.querySelector('.user span').textContent;
+  const a = btn.dataset.a;
+  if (a === 'copy') { await copyText(text); btn.innerHTML = ICON.ok; btn.classList.add('ok'); btn.title = 'Copied'; setTimeout(() => { btn.innerHTML = ICON.copy; btn.classList.remove('ok'); btn.title = 'Copy prompt'; }, 1400); }
+  if (a === 'retry' && !busy && chat) runTurn(sec, chat, text, idx, true);
+  if (a === 'edit' && !busy && chat) {
+    const u = sec.querySelector('.user'); if (u.querySelector('.edit')) return;
+    const span = u.querySelector('span'), acts = u.querySelector('.acts'); span.hidden = acts.hidden = true;
+    const f = document.createElement('div'); f.className = 'edit';
+    f.innerHTML = '<input maxlength="100" aria-label="Edit prompt"><button type="button" class="cn">Cancel</button><button type="button" class="sv">Save &amp; search</button>';
+    const inp = f.querySelector('input'); inp.value = text; u.prepend(f); inp.focus(); inp.select();
+    const close = () => { f.remove(); span.hidden = acts.hidden = false; };
+    const save = () => { const v = inp.value.trim(); close(); if (v && v !== text) runTurn(sec, chat, v, idx, false); };
+    f.querySelector('.cn').onclick = close; f.querySelector('.sv').onclick = save;
+    inp.onkeydown = ev => { if (ev.key === 'Enter') save(); if (ev.key === 'Escape') close(); };
+  }
+});
+function openChat(id) {
+  const c = chats.find(x => x.id === id); if (!c || busy) return;
+  active = id; feed.innerHTML = ''; $('#hero').style.display = 'none';
+  c.msgs.forEach((m, i) => { const s = turnShell(m.text, i); s.style.animation = 'none'; s.querySelector('.think').remove(); feed.appendChild(s); renderResults(s.querySelector('.res'), m); });
+  renderHist(); closeSide(); scroller.scrollTo({ top: 0 });
+}
+function newChat() { if (busy) return; active = null; feed.innerHTML = ''; $('#hero').style.display = ''; renderHist(); closeSide(); $('#q').focus(); }
+function renderHist() {
+  $('#hist').innerHTML = chats.length ? chats.map(c => `<button class="h ${c.id === active ? 'on' : ''}" data-id="${c.id}"><span>${esc(c.title)}</span><i data-del="${c.id}" title="Delete">✕</i></button>`).join('') : '<div class="emp">Your searches will appear here.</div>';
+}
+$('#hist').onclick = e => {
+  const d = e.target.closest('[data-del]');
+  if (d) { chats = chats.filter(c => c.id !== d.dataset.del); save(); if (active === d.dataset.del) newChat(); else renderHist(); return; }
+  const h = e.target.closest('.h'); if (h) openChat(h.dataset.id);
+};
+$('#newChat').onclick = newChat;
+$('#clear').onclick = () => { if (chats.length && confirm('Delete all chat history?')) { chats = []; save(); newChat(); } };
+const SUN = '<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>', MOON = '<svg viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4 8 8 0 1 0 20 14.5z"/></svg>';
+const paintTheme = () => { const d = document.documentElement.dataset.theme === 'dark'; $('#themeIc').innerHTML = d ? SUN : MOON; $('#themeTx').textContent = d ? 'Light mode' : 'Dark mode'; };
+$('#theme').onclick = () => { const r = document.documentElement, n = r.dataset.theme === 'dark' ? 'light' : 'dark'; r.dataset.theme = n; paintTheme(); try { localStorage.setItem('shophai.theme', n); } catch (_) {} };
+const openSide = () => { $('#side').classList.add('open'); $('#ov').classList.add('open'); }, closeSide = () => { $('#side').classList.remove('open'); $('#ov').classList.remove('open'); };
+const mob = () => matchMedia('(max-width:800px)').matches;
+const setCol = c => { document.body.classList.toggle('collapsed', c); try { localStorage.setItem('shophai.col', c ? '1' : ''); } catch (_) {} };
+$('#burger').onclick = () => mob() ? openSide() : setCol(false);
+$('#collapse').onclick = () => mob() ? closeSide() : setCol(true);
+try { if (localStorage.getItem('shophai.col')) document.body.classList.add('collapsed'); } catch (_) {}
+ $('#ov').onclick = closeSide;
+$('#f').addEventListener('submit', e => { e.preventDefault(); if (busy) return; const v = $('#q').value; $('#q').value = ''; search(v); });
+addEventListener('keydown', e => { if (e.key === 'Escape') closeSide(); });
+
+// ---------- voice input (speech to text) ----------
+(() => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition, mic = $('#mic'), q = $('#q'), ph = q.placeholder;
+  if (!SR) return; mic.hidden = false;
+  let rec = null, heard = '';
+  const note = m => { q.placeholder = m; setTimeout(() => q.placeholder = ph, 3500); };
+  const stop = () => { if (rec) rec.stop(); };
+  mic.onclick = () => {
+    if (rec) return stop();
+    if (busy) return;
+    rec = new SR(); rec.lang = 'en-IN'; rec.interimResults = true; rec.maxAlternatives = 1; heard = '';
+    rec.onstart = () => { mic.classList.add('on'); mic.title = 'Stop listening'; q.value = ''; q.placeholder = 'Listening…'; };
+    rec.onresult = e => { heard = [...e.results].map(r => r[0].transcript).join(' ').trim(); q.value = heard.slice(0, 100); };
+    rec.onerror = e => { if (e.error === 'not-allowed' || e.error === 'service-not-allowed') note('Microphone blocked. Allow access in your browser.'); else if (e.error === 'no-speech') note('Didn’t catch that. Try again.'); else if (e.error !== 'aborted') note('Voice search failed. Try typing instead.'); };
+    rec.onend = () => { rec = null; mic.classList.remove('on'); mic.title = 'Search by voice'; q.placeholder = ph; if (heard) { q.value = ''; search(heard); } };
+    try { rec.start(); } catch (_) { rec = null; }
+  };
+  $('#f').addEventListener('submit', stop);
+})();
+// ---------- accounts, guest limit, owner dashboard ----------
+window.Auth = (() => {
+  const live = !API_URL.startsWith('PASTE'), m = $('#ownModal'), d = $('#dash'), pw = $('#ownPw'), em = $('#ownEm'), err = $('#ownErr'), go = $('#ownGo'), q = $('#q'), ph0 = q.placeholder;
+  const ls = { get: k => { try { return localStorage.getItem(k) || ''; } catch (_) { return ''; } }, set: (k, v) => { try { v ? localStorage.setItem(k, v) : localStorage.removeItem(k); } catch (_) {} } };
+  const tok = () => ls.get('shophai.tok'), mail = () => ls.get('shophai.email'), isOwner = () => ls.get('shophai.role') === 'owner', used = () => +ls.get('shophai.guest') || 0;
+  const blocked = () => live && !tok() && used() >= 1;
+  const MSG = { invalid: 'Wrong email or password.', locked: 'Too many attempts. Try again in 15 minutes.', bad_email: 'Enter a valid email address.', weak: 'Use at least 8 characters for your password.', exists: 'An account with this email already exists. Log in instead.', busy: 'Too many sign-ups right now. Try again in a while.' };
+  const post = async o => (await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(o) })).json();
+  let mode = 'login';
+  const sync = () => { $('#ownTx').textContent = tok() ? mail() : 'Log in'; q.placeholder = blocked() ? 'Log in to keep searching' : ph0; if (!blocked()) document.querySelectorAll('.gate').forEach(x => x.remove()); };
+  const setSession = (t, e, r) => { ls.set('shophai.tok', t); ls.set('shophai.email', e); ls.set('shophai.role', r); sync(); };
+  const view = (md, msg) => {
+    mode = md; err.textContent = ''; const acc = md === 'account', su = md === 'signup';
+    $('#amF').hidden = acc; $('#amDash').hidden = !(acc && isOwner());
+    $('#amT').textContent = acc ? 'Your account' : su ? 'Create an account' : 'Log in';
+    $('#amP').textContent = acc ? 'Signed in as ' + mail() + (isOwner() ? ' (owner)' : '') : msg || (su ? 'Free, and it only takes a few seconds.' : 'Welcome back.');
+    go.textContent = acc ? 'Sign out' : su ? 'Create account' : 'Log in';
+    pw.autocomplete = su ? 'new-password' : 'current-password';
+    $('#amSw').innerHTML = acc ? '' : su ? 'Already have an account? <button type="button" data-sw="login">Log in</button>' : 'New here? <button type="button" data-sw="signup">Create an account</button>';
+  };
+  const openM = (md, msg) => { closeSide(); view(md, msg); if (!live && md !== 'account') err.textContent = 'Add your Apps Script URL to API_URL first.'; m.hidden = false; pw.value = ''; if (md !== 'account') (em.value ? pw : em).focus(); };
+  const showGate = () => { if (!blocked() || feed.querySelector('.gate')) return; const g = document.createElement('div'); g.className = 'gate'; g.innerHTML = '<h3>Log in or create an account to continue</h3><p>Your first search is free. Sign up to keep searching and save your history.</p><div class="row" style="justify-content:center"><button class="btn" data-auth="login">Log in</button><button class="btn pri" data-auth="signup">Create account</button></div>'; feed.appendChild(g); toEnd(); };
+  const signOut = () => { setSession('', '', ''); m.hidden = true; d.hidden = true; };
+  const bars = (a, k, v) => { const mx = Math.max(1, ...a.map(x => x[v])); return a.length ? a.map(x => `<div class="br"><span>${esc(x[k])}</span><b>${x[v]}</b><i><u style="width:${x[v] / mx * 100}%"></u></i></div>`).join('') : '<div class="emp2">Nothing yet.</div>'; };
+  const when = t => new Date(t).toLocaleString('en-IN', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+  const draw = s => {
+    const mx = Math.max(1, ...s.days.map(x => x.n));
+    d.innerHTML = `<div class="dh"><h2>Owner dashboard</h2><button class="btn" id="dRef">Refresh</button><button class="btn" id="dOut">Sign out</button><button class="btn pri" id="dClose">Close</button></div>
+    <div class="db"><div class="kp"><div class="pn"><h3>Total searches</h3><b>${s.total}</b></div><div class="pn"><h3>Today</h3><b>${s.today}</b></div><div class="pn"><h3>Last 7 days</h3><b>${s.week}</b></div><div class="pn"><h3>Unique queries</h3><b>${s.unique}</b></div></div>
+    <div class="pn"><h3>Searches per day, last 14 days</h3><div class="days">${s.days.map(x => `<div style="height:${x.n / mx * 100}%" title="${x.d}: ${x.n}"></div>`).join('')}</div></div>
+    <div class="two"><div class="pn"><h3>Top searches</h3>${bars(s.top, 'q', 'n')}</div><div class="pn"><h3>Where results came from</h3>${bars(s.sources, 's', 'n')}<h3 style="margin-top:16px">Searches with no results</h3>${bars(s.zero, 'q', 'n')}</div></div>
+    <div class="pn"><h3>Recent searches</h3><div class="tw"><table class="tb">${s.recent.map(r => `<tr><td>${when(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td>${r[3]} found</td></tr>`).join('') || '<tr><td>No searches logged yet.</td></tr>'}</table></div></div>
+    <div class="emp2">Based on the latest ${s.sampled} logged searches.</div></div>`;
+    $('#dRef').onclick = load; $('#dClose').onclick = () => d.hidden = true; $('#dOut').onclick = signOut;
+  };
+  async function load() {
+    d.hidden = false; if (!d.innerHTML) d.innerHTML = '<div class="dh"><h2>Loading…</h2></div>';
+    try { const r = await post({ action: 'stats', token: tok() }); if (r.ok) return draw(r.stats); if (r.error === 'auth') { signOut(); openM('login', 'Session expired. Log in again.'); return; } throw 0; }
+    catch (_) { d.innerHTML = '<div class="dh"><h2>Couldn’t load the dashboard</h2><button class="btn" id="dRef">Try again</button><button class="btn pri" id="dClose">Close</button></div>'; $('#dRef').onclick = load; $('#dClose').onclick = () => d.hidden = true; }
+  }
+  $('#owner').onclick = () => openM(tok() ? 'account' : 'login');
+  $('#ownCancel').onclick = () => m.hidden = true;
+  $('#amDash').onclick = () => { m.hidden = true; d.innerHTML = ''; load(); };
+  m.addEventListener('mousedown', e => { if (e.target === m) m.hidden = true; });
+  addEventListener('keydown', e => { if (e.key === 'Escape') { m.hidden = true; d.hidden = true; } });
+  document.addEventListener('click', e => { const b = e.target.closest('[data-auth]'); if (b) openM(b.dataset.auth); const w = e.target.closest('[data-sw]'); if (w) view(w.dataset.sw); });
+  $('#ownForm').addEventListener('submit', async e => {
+    e.preventDefault();
+    if (mode === 'account') return signOut();
+    if (!live) { err.textContent = 'Add your Apps Script URL to API_URL first.'; return; }
+    if (!em.value || !pw.value) { err.textContent = 'Enter your email and password.'; return; }
+    const t0 = go.textContent; go.disabled = true; go.textContent = 'Please wait…'; err.textContent = '';
+    try {
+      const r = await post({ action: mode, email: em.value, pass: pw.value });
+      if (r.ok) { setSession(r.token, r.email, r.role); m.hidden = true; if (r.role === 'owner') { d.innerHTML = ''; load(); } }
+      else err.textContent = MSG[r.error] || 'Something went wrong. Try again.';
+    } catch (_) { err.textContent = 'Couldn’t reach the server. Check your connection.'; }
+    go.disabled = false; go.textContent = t0; pw.value = '';
+  });
+  sync();
+  if (live && tok()) post({ action: 'me', token: tok() }).then(r => { if (!r.ok && r.error === 'auth') setSession('', '', ''); }).catch(() => {});
+  return {
+    gate() { if (!blocked()) return false; showGate(); openM('login', 'Log in or create an account to continue'); return true; },
+    after() { if (live && !tok()) { ls.set('shophai.guest', String(used() + 1)); sync(); showGate(); } }
+  };
+})();
+// ---------- init ----------
+try { document.documentElement.dataset.theme = localStorage.getItem('shophai.theme') || 'light'; } catch (_) { document.documentElement.dataset.theme = 'light'; }
+paintTheme();
+$('#chips').innerHTML = SUGG.map(s => `<button class="chip" data-q="${esc(s.replace(/^\S+\s/, ''))}">${esc(s)}</button>`).join('');
+if (API_URL.startsWith('PASTE')) $('#demoNote').innerHTML = '<span class="demo-note">Showing sample products. Add your Apps Script URL to see live prices.</span>';
+$('#hero').onclick = e => { const b = e.target.closest('[data-q]'); if (b) search(b.dataset.q); };
+save(); renderHist();
+</script></body></html>
